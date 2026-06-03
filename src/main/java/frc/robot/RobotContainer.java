@@ -24,6 +24,7 @@ import frc.robot.commands.LockWheelsCMD;
 import frc.robot.commands.MoveIntakePitcherCMD;
 import frc.robot.commands.PeriodicLightsCMD;
 import frc.robot.commands.ResetHeadingCMD;
+import frc.robot.commands.SetLightsCMD;
 import frc.robot.commands.StopShooterMotorsCMD;
 import frc.robot.commands.SwerveJoystickCMD;
 import frc.robot.commands.commandgroups.FireShot;
@@ -144,12 +145,18 @@ public class RobotContainer {
 
     //Fire a shot Manually
     new POVButton(driverJoyStick, OIConstants.kDpadRIGHT).whileTrue(
-      new FireShot(indexerSub, conveyorSub, intakePitcherSub)    
+      new FireShot(indexerSub, conveyorSub, intakePitcherSub)
+    );
+
+    new POVButton(driverJoyStick, OIConstants.kDpadRIGHT).whileTrue(
+      new SetLightsCMD(ledsub, 0.71)
     );
 
     new JoystickButton(driverJoyStick, OIConstants.kPsButton).whileTrue(
       StopShooting
     );
+
+    new JoystickButton(driverJoyStick, 14).whileTrue(new SetLightsCMD(ledsub, -0.61));
 
   
     new JoystickButton(driverJoyStick, OIConstants.kL2TriggerButton).whileTrue(

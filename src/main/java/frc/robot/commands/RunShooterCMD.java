@@ -1,9 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.util.ShooterPhysics;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.SwerveSub;
 import frc.robot.util.PoseManager;
@@ -17,7 +14,6 @@ public class RunShooterCMD extends InstantCommand {
     private double desiredVelocity; // fps
     private final boolean distanceBased;
 
-    ShooterPhysics CalculateShot = new ShooterPhysics();
     // 1‑param constructor
     // → distance-based: looks up velocity from Limelight distance when command starts
     public RunShooterCMD(ShooterSub shooterSub, SwerveSub swerveSub) {
@@ -79,103 +75,24 @@ public class RunShooterCMD extends InstantCommand {
 
         if (distanceBased && PoseManager.isInAllianceZone(swerveSub)) {
             double distanceFeet = PoseManager.getDistanceToHubFeet(swerveSub);
-
-            ShooterPhysics.ShotResult r = CalculateShot.computeShot(
-            Units.feetToMeters(distanceFeet),
-            Units.inchesToMeters(ShooterConstants.kShooterHeightInches),
-            Units.inchesToMeters(ShooterConstants.kHeightOfHubInches),
-            Units.inchesToMeters(41.7),
-            Units.inchesToMeters(47),
-            Units.inchesToMeters(ShooterConstants.kWheelDiameterInches / 2.0),
-            ShooterConstants.shooterEfficiency,
-            ShooterConstants.kMaxShooterRPM,
-            ShooterConstants.kShooterFixedAngle
-            );
-
-            double velocityFps = Units.metersToFeet(r.velocityMPerSec);
-            double velocityErrorPercent = Math.abs(velocityFps - ShooterLookup.getInterpolatedVelocity(distanceFeet)) / velocityFps * 100;
-
-            if (!r.valid || velocityErrorPercent >= 3) { 
-                this.desiredVelocity = velocityFps;
-            } else {
-                this.desiredVelocity = (ShooterLookup.getInterpolatedVelocity(distanceFeet) + velocityFps) / 2.0;
-            }
-
+            this.desiredVelocity = ShooterLookup.getInterpolatedVelocity(distanceFeet);
         } else if (
                 distanceBased && 
                 PoseManager.isInWasteLand(swerveSub) && 
                 PoseManager.isOnLeftSideOfField(swerveSub)){ // OG -> &&!PoseManager.isInAllianceZone(swerveSub) <- Redundant, if you are in neutral zone, you aren't in alliance zone
             
             double distanceFeet = PoseManager.getDistanceToLeftAllianceZoneMidpoint(swerveSub);
-            
-            ShooterPhysics.ShotResult r = CalculateShot.computeShot(
-            Units.feetToMeters(distanceFeet),
-            Units.inchesToMeters(ShooterConstants.kShooterHeightInches),
-            Units.inchesToMeters(ShooterConstants.kHeightOfHubInches),
-            Units.inchesToMeters(41.7),
-            Units.inchesToMeters(47),
-            Units.inchesToMeters(ShooterConstants.kWheelDiameterInches / 2.0),
-            ShooterConstants.shooterEfficiency,
-            ShooterConstants.kMaxShooterRPM,
-            ShooterConstants.kShooterFixedAngle
-            );
-
-            double velocityFps = Units.metersToFeet(r.velocityMPerSec);
-            double velocityErrorPercent = Math.abs(velocityFps - ShooterLookup.getInterpolatedVelocity(distanceFeet)) / velocityFps * 100;
-
-            if (!r.valid || velocityErrorPercent >= 3) { 
-                this.desiredVelocity = velocityFps;
-            } else {
-                this.desiredVelocity = (ShooterLookup.getInterpolatedVelocity(distanceFeet) + velocityFps) / 2.0;
-            }
+            this.desiredVelocity = ShooterLookup.getInterpolatedVelocity(distanceFeet);
         } else if (
                 distanceBased && 
                 PoseManager.isInWasteLand(swerveSub) && 
                 !PoseManager.isOnLeftSideOfField(swerveSub)){ // see line 82 comment
             
             double distanceFeet = PoseManager.getDistanceToRightAllianceZoneMidpoint(swerveSub);
-            ShooterPhysics.ShotResult r = CalculateShot.computeShot(
-            Units.feetToMeters(distanceFeet),
-            Units.inchesToMeters(ShooterConstants.kShooterHeightInches),
-            Units.inchesToMeters(ShooterConstants.kHeightOfHubInches),
-            Units.inchesToMeters(41.7),
-            Units.inchesToMeters(47),
-            Units.inchesToMeters(ShooterConstants.kWheelDiameterInches / 2.0),
-            ShooterConstants.shooterEfficiency,
-            ShooterConstants.kMaxShooterRPM,
-            ShooterConstants.kShooterFixedAngle
-            );
-
-            double velocityFps = Units.metersToFeet(r.velocityMPerSec);
-            double velocityErrorPercent = Math.abs(velocityFps - ShooterLookup.getInterpolatedVelocity(distanceFeet)) / velocityFps * 100;
-
-            if (!r.valid || velocityErrorPercent >= 3) { 
-                this.desiredVelocity = velocityFps;
-            } else {
-                this.desiredVelocity = (ShooterLookup.getInterpolatedVelocity(distanceFeet) + velocityFps) / 2.0;
-            }
+            this.desiredVelocity = ShooterLookup.getInterpolatedVelocity(distanceFeet);
         } else {
             double distanceFeet = PoseManager.getDistanceToHubFeet(swerveSub);
-            ShooterPhysics.ShotResult r = CalculateShot.computeShot(
-            Units.feetToMeters(distanceFeet),
-            Units.inchesToMeters(ShooterConstants.kShooterHeightInches),
-            Units.inchesToMeters(ShooterConstants.kHeightOfHubInches),
-            Units.inchesToMeters(41.7),
-            Units.inchesToMeters(47),
-            Units.inchesToMeters(ShooterConstants.kWheelDiameterInches / 2.0),
-            ShooterConstants.shooterEfficiency,
-            ShooterConstants.kMaxShooterRPM,
-            ShooterConstants.kShooterFixedAngle
-            );
-
-            double velocityFps = Units.metersToFeet(r.velocityMPerSec);
-            double velocityErrorPercent = Math.abs(velocityFps - ShooterLookup.getInterpolatedVelocity(distanceFeet)) / velocityFps * 100;
-
-            if (!r.valid || velocityErrorPercent >= 3) { 
-                this.desiredVelocity = velocityFps;
-            } else {
-                this.desiredVelocity = (ShooterLookup.getInterpolatedVelocity(distanceFeet) + velocityFps) / 2.0;
-            }
+            this.desiredVelocity = ShooterLookup.getInterpolatedVelocity(distanceFeet);
         }
 
         shooterSub.setShooterVelocityFPS(desiredVelocity);
