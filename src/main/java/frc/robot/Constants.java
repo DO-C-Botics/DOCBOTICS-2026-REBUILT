@@ -239,7 +239,7 @@ public final class Constants {
     public static final double kIndexSpeed = 0.95;
     public static final double kReverseIndexSpeed = -0.95; 
 
-    public static final double kWarmupVelocityFPS = 50;
+    public static final double kWarmupVelocityFPS = 40;
 
     public static final double kJuggleVelocityFPS = 10;
 

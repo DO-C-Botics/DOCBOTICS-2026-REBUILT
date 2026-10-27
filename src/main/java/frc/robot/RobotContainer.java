@@ -69,16 +69,16 @@ public class RobotContainer {
     //  DEFAULT COMMANDS
 
      // Configure the trigger bindings
-    swerveSub.setDefaultCommand(
-        new SwerveJoystickCMD(
-            swerveSub,
-            () -> -driverJoyStick.getRawAxis(OIConstants.kDriverYAxis),
-            () -> driverJoyStick.getRawAxis(OIConstants.kDriverXAxis),
-            () -> driverJoyStick.getRawAxis(OIConstants.kDriverRotAxis),
-            () -> driverJoyStick.getRawButtonPressed(OIConstants.kL3Button),
-             /// By default will be on field oriented.
-            () -> !
-            driverJoyStick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx))); 
+    // swerveSub.setDefaultCommand(
+    //     new SwerveJoystickCMD(
+    //         swerveSub,
+    //         () -> -driverJoyStick.getRawAxis(OIConstants.kDriverYAxis),
+    //         () -> driverJoyStick.getRawAxis(OIConstants.kDriverXAxis),
+    //         () -> driverJoyStick.getRawAxis(OIConstants.kDriverRotAxis),
+    //         () -> driverJoyStick.getRawButtonPressed(OIConstants.kL3Button),
+    //          /// By default will be on field oriented.
+    //         () -> !
+    //         driverJoyStick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx))); 
 
     ledsub.setDefaultCommand(new PeriodicLightsCMD(ledsub));
     
